@@ -3,13 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Centered Rating Component</title>
+    <title>Rating Component with Settings</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<div class="rating-container">
-    <feedback-rating value="3" max="5" fractional></feedback-rating>
+<feedback-rating id="rating-element" value="3.5" max="5"></feedback-rating>
+
+<div class="settings-menu">
+    <label>
+        Number of Stars:
+        <input type="number" id="num-stars" min="1" max="10" value="5">
+    </label>
+    <label>
+        Default Value:
+        <input type="number" id="default-value" min="0" max="10" step="0.5" value="3.5">
+    </label>
+    <label>
+        Color for Stars:
+        <input type="color" id="star-color" value="#ffd700">
+    </label>
+    <label>
+        Star Size (px):
+        <input type="number" id="star-size" min="10" value="36">
+    </label>
+    <button type="button" id="apply-settings">Apply Settings</button>
 </div>
 
 <script src="script.js" defer></script>
