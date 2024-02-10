@@ -1,39 +1,61 @@
-/* Ensure body and html are set to full height and centered */
 body, html {
     margin: 0;
     padding: 0;
     height: 100%;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
-    background-color: #333; /* Dark grey background for contrast */
+    justify-content: center;
+    background-color: #333; /* Dark theme background */
 }
 
-.rating-container {
+.settings-menu {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
     padding: 20px;
-    background-color: #444; /* Slightly lighter grey for the container */
+    background: #444; /* Slightly lighter grey for contrast */
     border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2); /* Soft shadow for depth */
+    width: auto;
+}
+
+.settings-menu label {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
+    color: #fff; /* Light text for contrast */
 }
 
-.feedback-rating {
-    display: inline-flex;
-    font-size: 0; /* Removing space between inline elements */
+.settings-menu input[type="number"],
+.settings-menu input[type="color"] {
+    width: 100px; /* Equal width for alignment */
+    padding: 5px;
+    margin-left: 10px; /* Space between label and input */
+    background-color: #555; /* Dark grey background */
+    border: 1px solid #666; /* Slightly darker border for definition */
+    border-radius: 4px; /* Softened edges */
+    color: #ddd; /* Light text for readability */
 }
 
-.rating-star {
-    font-size: 28.8px; /* Directly increase the size by 20% from an assumed base of 24px */
-    color: var(--star-color-inactive, #cccccc); /* Default star color */
-    user-select: none;
-    transition: transform 0.3s ease; /* Transition for smooth scaling */
+.settings-menu input[type="color"] {
+    padding: 0; /* Override for color picker input */
 }
 
-.rating-star.active, .rating-star.half:before {
-    color: var(--star-color-active, #ffd700); /* Active star color */
+.settings-menu button {
+    padding: 10px 15px;
+    background-color: #363636; /* Match star active color */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: #e0e0e0; /* Dark text for contrast */
+    font-weight: bold;
+    text-transform: uppercase; /* Stylistic choice for emphasis */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Smooth transitions for interaction */
 }
 
-.rating-star:hover {
-    transform: scale(1.8); /* Increase size by 20% on hover */
+.settings-menu button:hover {
+    background-color: #2b2b2bd3; /* Lighter on hover for interactivity */
+    
 }
