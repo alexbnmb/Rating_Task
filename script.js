@@ -2,8 +2,11 @@ class FeedbackRating extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this._value = 0; // Example default value, supporting halves
-    this._maxValue = 5;
+    // Initialize default properties
+    this._value = parseFloat(this.getAttribute("value")) || 3.5; // Supporting halves by default
+    this._maxValue = parseInt(this.getAttribute("max")) || 5;
+    this._starColor = "#ffd700"; // Default star color
+    this._starSize = "36px"; // Default star size, increased by 20%
   }
 
   connectedCallback() {
@@ -19,15 +22,15 @@ class FeedbackRating extends HTMLElement {
                 align-items: center;
             }
             .rating-star {
-                font-size: 36px; /* Adjust for bigger stars */
+                font-size: ${this._starSize}; /* Dynamic star size */
                 color: #cccccc; /* Inactive star color */
                 cursor: pointer;
                 transition: transform 0.3s ease; /* Smooth transition for hover effect */
                 position: relative;
                 display: inline-block;
             }
-            .rating-star.active {
-                color: #ffd700; /* Active star color */
+            .rating-star.active, .rating-star.half::after {
+                color: ${this._starColor}; /* Dynamic active star color */
             }
             .rating-star:hover {
                 transform: scale(1.2); /* Enlarge star on hover */
@@ -39,7 +42,6 @@ class FeedbackRating extends HTMLElement {
                 top: 0;
                 width: 50%; /* Show half star */
                 overflow: hidden;
-                color: #ffd700; /* Active star color */
             }
         `;
 
@@ -57,7 +59,6 @@ class FeedbackRating extends HTMLElement {
       star.classList.add("rating-star");
       star.innerHTML = "★"; // Star character
 
-      // Determine if star should be active or half-active based on value
       if (i <= this._value) {
         star.classList.add("active");
       }
@@ -65,7 +66,6 @@ class FeedbackRating extends HTMLElement {
         star.classList.add("half");
       }
 
-      // Adjust for hover and click to support half-stars
       star.addEventListener("click", (e) =>
         this.updateValue(i, e.offsetX < star.offsetWidth / 2)
       );
@@ -86,7 +86,7 @@ class FeedbackRating extends HTMLElement {
   }
 
   previewValue(i, isHalf) {
-    // Temporarily adjust visual preview without changing actual value
+    // Temporarily adjust visual preview without changing the actual value
     this.shadowRoot.querySelectorAll(".rating-star").forEach((star, index) => {
       star.classList.remove("active", "half");
       let value = isHalf ? i - 0.5 : i;
@@ -94,6 +94,27 @@ class FeedbackRating extends HTMLElement {
       if (index + 0.5 === value) star.classList.add("half");
     });
   }
+
+  updateProperties(numStars, defaultValue, starColor, starSize) {
+    this._maxValue = parseInt(numStars);
+    this._value = parseFloat(defaultValue);
+    this._starColor = starColor;
+    this._starSize = starSize;
+    this.render();
+  }
 }
 
 customElements.define("feedback-rating", FeedbackRating);
+
+document.addEventListener("DOMContentLoaded", () => {
+  const ratingElement = document.querySelector("feedback-rating");
+
+  document.getElementById("apply-settings").addEventListener("click", () => {
+    const numStars = document.getElementById("num-stars").value;
+    const defaultValue = document.getElementById("default-value").value;
+    const starColor = document.getElementById("star-color").value;
+    const starSize = document.getElementById("star-size").value + "px";
+
+    ratingElement.updateProperties(numStars, defaultValue, starColor, starSize);
+  });
+});
