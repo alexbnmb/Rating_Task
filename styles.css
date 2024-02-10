@@ -1,0 +1,39 @@
+/* Ensure body and html are set to full height and centered */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #333; /* Dark grey background for contrast */
+}
+
+.rating-container {
+    padding: 20px;
+    background-color: #444; /* Slightly lighter grey for the container */
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.feedback-rating {
+    display: inline-flex;
+    font-size: 0; /* Removing space between inline elements */
+}
+
+.rating-star {
+    font-size: 28.8px; /* Directly increase the size by 20% from an assumed base of 24px */
+    color: var(--star-color-inactive, #cccccc); /* Default star color */
+    user-select: none;
+    transition: transform 0.3s ease; /* Transition for smooth scaling */
+}
+
+.rating-star.active, .rating-star.half:before {
+    color: var(--star-color-active, #ffd700); /* Active star color */
+}
+
+.rating-star:hover {
+    transform: scale(1.8); /* Increase size by 20% on hover */
+}
