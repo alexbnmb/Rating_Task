@@ -2,10 +2,9 @@ class FeedbackRating extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    // Initialize default properties
-    this._value = parseFloat(this.getAttribute("value")) || 3.5; // Supporting halves by default
-    this._maxValue = parseInt(this.getAttribute("max")) || 5;
-    this._starColor = "#ffd700"; // Default star color
+    this._value = parseFloat(this.getAttribute("value")) || 3.5; // Default value, supporting halves
+    this._maxValue = parseInt(this.getAttribute("max")) || 5; // Default max value
+    this._starColor = "#ffd700"; // Default star active color
     this._starSize = "36px"; // Default star size, increased by 20%
   }
 
@@ -22,7 +21,7 @@ class FeedbackRating extends HTMLElement {
                 align-items: center;
             }
             .rating-star {
-                font-size: ${this._starSize}; /* Dynamic star size */
+                font-size: ${this._starSize};
                 color: #cccccc; /* Inactive star color */
                 cursor: pointer;
                 transition: transform 0.3s ease; /* Smooth transition for hover effect */
@@ -43,11 +42,23 @@ class FeedbackRating extends HTMLElement {
                 width: 50%; /* Show half star */
                 overflow: hidden;
             }
+            .rating-text {
+                margin-top: 8px;
+                color: #ffffff;
+                font-size: 20px;
+                text-align: center;
+            }
         `;
 
     this.shadowRoot.innerHTML = ""; // Clear existing content
     this.shadowRoot.appendChild(style);
     this.shadowRoot.appendChild(this.createStars());
+
+    // Create and append the rating text element
+    const ratingText = document.createElement("div");
+    ratingText.classList.add("rating-text");
+    ratingText.textContent = `Rating: ${this._value}/${this._maxValue}`;
+    this.shadowRoot.appendChild(ratingText);
   }
 
   createStars() {
@@ -82,7 +93,7 @@ class FeedbackRating extends HTMLElement {
 
   updateValue(i, isHalf) {
     this._value = isHalf ? i - 0.5 : i;
-    this.render();
+    this.render(); // Re-render to update the displayed rating
   }
 
   previewValue(i, isHalf) {
@@ -108,13 +119,33 @@ customElements.define("feedback-rating", FeedbackRating);
 
 document.addEventListener("DOMContentLoaded", () => {
   const ratingElement = document.querySelector("feedback-rating");
+  const numStarsInput = document.getElementById("num-stars");
+  const defaultValueInput = document.getElementById("default-value");
 
   document.getElementById("apply-settings").addEventListener("click", () => {
-    const numStars = document.getElementById("num-stars").value;
-    const defaultValue = document.getElementById("default-value").value;
+    const numStars = numStarsInput.value;
+    const defaultValue = defaultValueInput.value;
     const starColor = document.getElementById("star-color").value;
     const starSize = document.getElementById("star-size").value + "px";
 
-    ratingElement.updateProperties(numStars, defaultValue, starColor, starSize);
+    // Validation to ensure default value does not exceed number of stars
+    const validatedDefaultValue = Math.min(defaultValue, numStars);
+
+    ratingElement.updateProperties(
+      numStars,
+      validatedDefaultValue,
+      starColor,
+      starSize
+    );
+  });
+
+  // Ensure default value does not exceed number of stars
+  numStarsInput.addEventListener("change", () => {
+    const numStars = parseInt(numStarsInput.value);
+    const defaultValue = parseFloat(defaultValueInput.value);
+
+    if (defaultValue > numStars) {
+      defaultValueInput.value = numStars;
+    }
   });
 });
